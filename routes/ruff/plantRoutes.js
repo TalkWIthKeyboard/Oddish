@@ -5,6 +5,7 @@
 
 let pub = {};
 let Plant = require('./../../models/plantModel');
+let PlantService = require('./../../service/plantService');
 let ERROR_INFO = require('./../../service/config').ERROR_INFO;
 
 /**
@@ -18,15 +19,17 @@ pub.createPlant = (req, res) => {
   let name = req.body.name || false,
       varieties = req.body.varieties || false,
       img = req.body.img || false,
-      sex = req.body.sex || false;
+      sex = req.body.sex || false,
+      age = req.body.age || false;
   // TODO 图片
 
-  if (name && varieties && sex && img) {
+  if (name && varieties && sex && img && age) {
     let _plant = new Plant({
       name: name,
       varieties: varieties,
       img: img,
       sex: sex,
+      age: age,
       mood: 100
     });
     _plant.save((err, plant) => {
@@ -41,7 +44,7 @@ pub.createPlant = (req, res) => {
       }
     })
   } else {
-    return ERROR_INFO.REQUEST_ERR
+    return res.json(ERROR_INFO.REQUEST_ERR)
   }
 };
 
@@ -80,7 +83,7 @@ pub.changePlant = (req, res) => {
       }
     })
   } else {
-    return ERROR_INFO.REQUEST_ERR
+    return res.json(ERROR_INFO.REQUEST_ERR)
   }
 };
 
@@ -108,7 +111,7 @@ pub.deletePlant = (req, res) => {
       }
     });
   } else {
-    return ERROR_INFO.REQUEST_ERR
+    return res.json(ERROR_INFO.REQUEST_ERR)
   }
 };
 
@@ -126,6 +129,7 @@ pub.findPlant = (req, res) => {
       if (err) {
         res.json(ERROR_INFO.PLANT_ERR);
       } else {
+        plant.age = PlantService.realAge(plant.meta.createAt, plant.age);
         res.json({
           "info": ERROR_INFO.SUCCESS,
           "plant": plant
@@ -133,7 +137,7 @@ pub.findPlant = (req, res) => {
       }
     })
   } else {
-    return ERROR_INFO.REQUEST_ERR
+    return res.json(ERROR_INFO.REQUEST_ERR)
   }
 };
 
@@ -150,6 +154,10 @@ pub.findPagination = (req, res) => {
     if (err) {
       res.json(ERROR_INFO.PLANT_ERR);
     } else {
+      _.map(plants, (plant) => {
+        plant.age = PlantService.realAge(plant.meta.createAt, plant.age);
+      });
+
       res.json({
         "info": ERROR_INFO.SUCCESS,
         "plants": plants,
@@ -173,6 +181,10 @@ pub.findNamePagination = (req, res) => {
     if (err) {
       res.json(ERROR_INFO.PLANT_ERR);
     } else {
+      _.map(plants, (plant) => {
+        plant.age = PlantService.realAge(plant.meta.createAt, plant.age);
+      });
+
       res.json({
         "info": ERROR_INFO.SUCCESS,
         "plants": plants,

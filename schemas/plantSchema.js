@@ -11,8 +11,9 @@ let PlantSchema = new mongoose.Schema({
   name:String,
   varieties:String,
   img:String,
-  sex:Number,
+  sex:String,
   mood:Number,
+  age:Number,
   meta:{
     createAt:{
       type: Date,

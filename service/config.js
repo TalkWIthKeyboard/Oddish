@@ -1,27 +1,21 @@
 /**
  * Created by CoderSong on 16/11/26.
  */
+'use strict';
+
 exports.pageSize = 10;
 exports.searchPageSize = 20;
 
 exports.USER_SEX = {
-  HUMAN: 'female',
-  MALE: 'male'
+  'female': {
+    'key': 0,
+    'value': 'female'
+  },
+  'male' : {
+    'key': 0,
+    'value': 'male'
+  }
 };
-
-exports.MNG_PATH = [
-  '/mng/user/login',
-  '/mng/user/register',
-  '/mng/user/getOneUser/:id',
-  '/mng/user/changePasswd',
-  '/mng/user/changeUserInfo/:id'
-];
-
-exports.H5_PATH = [
-  '/h5/user/searchName',
-  '/mng/user/getOneUser/:id',
-  '/mng/user/changeUserInfo/:id'
-];
 
 exports.ERROR_INFO = {
 
