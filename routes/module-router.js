@@ -33,6 +33,9 @@ router.post('/ruff/plant/:ruffId/data/tempHum', ruffData.saveTempHum);
 // 光照
 router.get('/app/plant/:plantId/data/illumination/day/:days', iosData.getIllumination);
 router.post('/ruff/plant/:ruffId/data/illumination', ruffData.saveIllumination);
+// 声音
+router.get('/app/plant/:plantId/data/sound/day/:days', iosData.getSound);
+router.post('/ruff/plant/:ruffId/data/sound',ruffData.saveSound);
 // 危险事件
 router.get('/app/plant/:plantId/data/dangerEvent', iosData.getDangerEventOnePlant);
 router.get('/app/plants/data/dangerEvent', iosData.getDangerEventAll);

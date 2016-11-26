@@ -8,6 +8,7 @@ let pub = {},
     Plant = require('./../../models/plantModel'),
     Illumination = require('./../../models/illuminationModel'),
     TempHum = require('./../../models/tempHumModel'),
+    Sound = require('./../../models/soundModel'),
     DangerEvent = require('./../../models/dangerEventModel'),
     config = require('./../../service/config'),
     ERROR_INFO = require('./../../service/config').ERROR_INFO;
@@ -22,9 +23,9 @@ pub.saveTempHum = (req, res) => {
       humidity = req.body.humidity || false,
       ruffId = req.params.ruffId;
 
-  if (ruffId && temperature && humidity){
+  if (ruffId && temperature && humidity) {
     Plant.findByRuffId(ruffId, (err, plant) => {
-      if (err){
+      if (err) {
         console.log(err);
         res.json(ERROR_INFO.DB_SELECT_ERR)
       } else {
@@ -35,13 +36,13 @@ pub.saveTempHum = (req, res) => {
         });
 
         _tempHum.save((err, th) => {
-          if (err){
+          if (err) {
             console.log(err);
             res.json(ERROR_INFO.DB_SAVE_ERR);
           } else {
             res.json({
               "info": ERROR_INFO.SUCCESS,
-              "thId": th.id
+              "classId": th.id
             })
           }
         })
@@ -61,9 +62,9 @@ pub.saveIllumination = (req, res) => {
   let illumination = req.body.illumination || false,
       ruffId = req.params.ruffId || false;
 
-  if (ruffId && illumination){
+  if (ruffId && illumination) {
     Plant.findByRuffId(ruffId, (err, plant) => {
-      if (err){
+      if (err) {
         console.log(err);
         res.json(ERROR_INFO.DB_SELECT_ERR);
       } else {
@@ -73,13 +74,13 @@ pub.saveIllumination = (req, res) => {
         });
 
         _illumination.save((err, ill) => {
-          if (err){
+          if (err) {
             console.log(err);
             res.json(ERROR_INFO.DB_SAVE_ERR);
           } else {
             res.json({
               "info": ERROR_INFO.SUCCESS,
-              "thId": ill.id
+              "classId": ill.id
             })
           }
         })
@@ -97,13 +98,13 @@ pub.saveIllumination = (req, res) => {
  * @param res
  */
 pub.saveDangerEvent = (req, res) => {
-  let ruffId = req.params.ruffId,
-      event = req.body.event,
-      classId = req.body.classId;
+  let ruffId = req.params.ruffId || false,
+      event = req.body.event || false,
+      classId = req.body.classId || false;
 
-  if (ruffId && event && classId){
+  if (ruffId && event && classId) {
     Plant.findByRuffId(ruffId, (err, plant) => {
-      if (err){
+      if (err) {
         console.log(err);
         res.json(ERROR_INFO.DB_SELECT_ERR);
       } else {
@@ -117,13 +118,13 @@ pub.saveDangerEvent = (req, res) => {
         });
 
         _dangerEvent.save((err, dangerEvent) => {
-          if (err){
+          if (err) {
             console.log(err);
             res.json(ERROR_INFO.DB_SAVE_ERR);
           } else {
             res.json({
               "info": ERROR_INFO.SUCCESS,
-              "dangerEvent": dangerEvent
+              "dangerEventId": dangerEvent.id
             })
           }
         })
@@ -131,6 +132,44 @@ pub.saveDangerEvent = (req, res) => {
     })
   } else {
     res.json(ERROR_INFO.REQUEST_ERR);
+  }
+};
+
+
+/**
+ * 保存声音信息
+ * @param req
+ * @param res
+ */
+pub.saveSound = (req, res) => {
+  let ruffId = req.params.ruffId || false,
+      sound = req.body.sound || false;
+  if (ruffId && sound) {
+    Plant.findByRuffId(ruffId, (err, plant) => {
+      if (err) {
+        console.log(err);
+        res.json(ERROR_INFO.DB_SELECT_ERR);
+      } else {
+        let _sound = Sound({
+          plantId: plant.id,
+          sound: sound
+        });
+
+        _sound.save((err, sound) => {
+          if (err){
+            console.log(err);
+            res.json(ERROR_INFO.DB_SAVE_ERR);
+          } else {
+            res.json({
+              "info": ERROR_INFO.SUCCESS,
+              "classId": sound.id
+            })
+          }
+        })
+      }
+    })
+  } else {
+    res.json(ERROR_INFO.REQUEST_ERR)
   }
 };
 
@@ -144,18 +183,18 @@ pub.solveDangerEvent = (req, res) => {
 
   let eventId = req.params.eventId || false;
 
-  if (eventId){
+  if (eventId) {
     DangerEvent.findById(eventId, (err, dangerEvent) => {
-      if (err){
+      if (err) {
         res.json(ERROR_INFO.DANGER_EVENT_ERR)
       } else {
-        if (dangerEvent.isSolve == config.IS_SOLVE["notSolve"].key){
+        if (dangerEvent.isSolve == config.IS_SOLVE["notSolve"].key) {
           dangerEvent.isSolve = config.IS_SOLVE["solve"].key;
           dangerEvent.isSend = config.IS_SEND["notSend"].key;
           // TODO 交流的话要修改
           dangerEvent.sentence = null;
           dangerEvent.save((err) => {
-            if (err){
+            if (err) {
               console.log(err);
               res.json(ERROR_INFO.DB_CHANGE_ERR);
             } else {
