@@ -19,7 +19,7 @@ pub.createRuff = (req, res) => {
   let ruffName = req.params.ruffName || false;
   if (ruffName) {
     Ruff.findByName(ruffName, (err, ruff) => {
-      if (ruff != null){
+      if (ruff.length != 0){
         res.json(ERROR_INFO.RUFF_ERR)
       } else {
         let _ruff = new Ruff({
