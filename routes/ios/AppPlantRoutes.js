@@ -39,7 +39,7 @@ pub.createPlant = (req, res) => {
           sex: sex,
           age: age,
           mood: 100,
-          ruffId: ruffId
+          ruffId: ruffName
         });
 
         _plant.save((err, plant) => {
