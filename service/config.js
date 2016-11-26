@@ -11,7 +11,7 @@ exports.USER_SEX = {
     'key': 0,
     'value': 'female'
   },
-  'male' : {
+  'male': {
     'key': 0,
     'value': 'male'
   }
@@ -43,9 +43,13 @@ exports.ERROR_INFO = {
     'code': 512,
     'value': '数据库删除错误'
   },
+  DB_SELECT_ERR: {
+    'code': 513,
+    'value': '数据库检索错误'
+  },
 
   // 植物状态操作码
-  PLANT_ERR:{
+  PLANT_ERR: {
     'code': 520,
     'value': '不存在这个植物'
   },

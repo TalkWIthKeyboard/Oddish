@@ -3,8 +3,10 @@
  */
 'use strict';
 
-let router = require('express').Router();
-let plant = require('./../routes/ruff/plantRoutes');
+let router = require('express').Router(),
+    plant = require('./ios/AppPlantRoutes'),
+    ruffData = require('./ruff/RuffDataRoutes'),
+    iosData = require('./ios/AppDataRoutes');
 
 /**
  * 植物相关操作
@@ -16,5 +18,10 @@ router.post('/app/plants/plant', plant.createPlant);
 router.put('/app/plants/plant/:id', plant.changePlant);
 router.delete('/app/plants/plant/:id', plant.deletePlant);
 
+/**
+ * 数据相关操作
+ */
+router.get('/app/plant/:plantId/data/tempHum/day/:days', iosData.getTempHumByDays);
+router.post('/ruff/plant/:plantId/data/tempHum', ruffData.saveTempHum);
 
 module.exports = router;

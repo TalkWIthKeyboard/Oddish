@@ -194,6 +194,6 @@ pub.findNamePagination = (req, res) => {
   })
 };
 
-// TODO 植物图标
+// TODO 植物图表
 
 module.exports = pub;
