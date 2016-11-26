@@ -29,12 +29,16 @@ router.post('/ruff/ruffs/name/:ruffName',ruff.createRuff);
  */
 // 温湿度
 router.get('/app/plant/:plantId/data/tempHum/day/:days', iosData.getTempHumByDays);
-router.post('/ruff/plant/:plantId/data/tempHum', ruffData.saveTempHum);
+router.post('/ruff/plant/:ruffId/data/tempHum', ruffData.saveTempHum);
+// 光照
+router.get('/app/plant/:plantId/data/illumination/day/:days', iosData.getIllumination);
+router.post('/ruff/plant/:ruffId/data/illumination', ruffData.saveIllumination);
 // 危险事件
 router.get('/app/plant/:plantId/data/dangerEvent', iosData.getDangerEventOnePlant);
 router.get('/app/plants/data/dangerEvent', iosData.getDangerEventAll);
-router.post('/ruff/plant/:plantId/data/dangerEvent', ruffData.saveDangerEvent);
+router.post('/ruff/plant/:ruffId/data/dangerEvent', ruffData.saveDangerEvent);
 router.get('/ruff/plant/data/dangerEvent/:eventId', ruffData.solveDangerEvent);
+
 
 
 module.exports = router;

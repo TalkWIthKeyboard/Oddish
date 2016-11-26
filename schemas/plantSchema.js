@@ -61,6 +61,12 @@ PlantSchema.statics = {
         .exec(cb)
   },
 
+  findByRuffId: function (ruffId, cb) {
+    return this
+        .findOne({ruffId: ruffId})
+        .exec(cb)
+  },
+
   deleteById: function (id, cb) {
     return this
         .remove({_id: id})

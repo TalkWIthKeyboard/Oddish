@@ -5,6 +5,8 @@
 
 let pub = {},
     _ = require('underscore'),
+    Plant = require('./../../models/plantModel'),
+    Illumination = require('./../../models/illuminationModel'),
     TempHum = require('./../../models/tempHumModel'),
     DangerEvent = require('./../../models/dangerEventModel'),
     config = require('./../../service/config'),
@@ -18,28 +20,73 @@ let pub = {},
 pub.saveTempHum = (req, res) => {
   let temperature = req.body.temperature || false,
       humidity = req.body.humidity || false,
-      plantId = req.params.plantId;
+      ruffId = req.params.ruffId;
 
-  if (plantId && temperature && humidity){
-    let _tempHum = new TempHum({
-      plantId: plantId,
-      temperature: temperature,
-      humidity: humidity
-    });
+  if (ruffId && temperature && humidity){
+    if (err){
+      console.log(err);
+      res.json(ERROR_INFO.DB_SELECT_ERR)
+    } else {
+      Plant.findByRuffId(ruffId, (err, plant) => {
+        let _tempHum = new TempHum({
+          plantId: plant.id,
+          temperature: temperature,
+          humidity: humidity
+        });
 
-    _tempHum.save((err, th) => {
+        _tempHum.save((err, th) => {
+          if (err){
+            console.log(err);
+            res.json(ERROR_INFO.DB_SAVE_ERR);
+          } else {
+            res.json({
+              "info": ERROR_INFO.SUCCESS,
+              "thId": th.id
+            })
+          }
+        })
+      })
+    }
+  } else {
+    res.json(ERROR_INFO.REQUEST_ERR);
+  }
+};
+
+/**
+ * 保存光照
+ * @param req
+ * @param res
+ */
+pub.saveIllumination = (req, res) => {
+  let illumination = req.body.illumination || false,
+      ruffId = req.params.ruffId || false;
+
+  if (ruffId && illumination){
+    Plant.findByRuffId(ruffId, (err, plant) => {
       if (err){
         console.log(err);
-        res.json(ERROR_INFO.DB_SAVE_ERR);
+        res.json(ERROR_INFO.DB_SELECT_ERR);
       } else {
-        res.json({
-          "info": ERROR_INFO.SUCCESS,
-          "thId": th.id
+        let _illumination = new Illumination({
+          plantId: plant.id,
+          illumination: illumination
+        });
+
+        _illumination.save((err, ill) => {
+          if (err){
+            console.log(err);
+            res.json(ERROR_INFO.DB_SAVE_ERR);
+          } else {
+            res.json({
+              "info": ERROR_INFO.SUCCESS,
+              "thId": ill.id
+            })
+          }
         })
       }
     })
   } else {
-    return res.json(ERROR_INFO.REQUEST_ERR);
+    res.json(ERROR_INFO.REQUEST_ERR);
   }
 };
 
@@ -50,29 +97,35 @@ pub.saveTempHum = (req, res) => {
  * @param res
  */
 pub.saveDangerEvent = (req, res) => {
-  let plantId = req.params.plantId,
+  let ruffId = req.params.ruffId,
       event = req.body.event,
       classId = req.body.classId;
 
-  if (plantId && event && classId){
-
-    let _dangerEvent = new DangerEvent({
-      plantId: plantId,
-      event: event,
-      classId: classId,
-      sentence: null,
-      isSend: config.IS_SEND['notSend'].key,
-      isSolve: config.IS_SOLVE['notSolve'].key
-    });
-
-    _dangerEvent.save((err, dangerEvent) => {
+  if (ruffId && event && classId){
+    Plant.findByRuffId(ruffId, (err, plant) => {
       if (err){
         console.log(err);
-        res.json(ERROR_INFO.DB_SAVE_ERR);
+        res.json(ERROR_INFO.DB_SELECT_ERR);
       } else {
-        res.json({
-          "info": ERROR_INFO.SUCCESS,
-          "dangerEvent": dangerEvent
+        let _dangerEvent = new DangerEvent({
+          plantId: plant.id,
+          event: event,
+          classId: classId,
+          sentence: null,
+          isSend: config.IS_SEND['notSend'].key,
+          isSolve: config.IS_SOLVE['notSolve'].key
+        });
+
+        _dangerEvent.save((err, dangerEvent) => {
+          if (err){
+            console.log(err);
+            res.json(ERROR_INFO.DB_SAVE_ERR);
+          } else {
+            res.json({
+              "info": ERROR_INFO.SUCCESS,
+              "dangerEvent": dangerEvent
+            })
+          }
         })
       }
     })
