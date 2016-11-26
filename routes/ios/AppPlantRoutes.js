@@ -27,7 +27,7 @@ pub.createPlant = (req, res) => {
       ruffName = req.body.ruffName || false;
   // TODO 图片
 
-  if (name && varieties && sex && img && age && ruffId) {
+  if (name && varieties && sex && img && age && ruffName) {
     Ruff.findByName(ruffName, (err, ruff) => {
       if (err || ruff.isUse == config.IS_USE.use.key) {
         res.json(ERROR_INFO.DB_SELECT_ERR);
