@@ -52,6 +52,16 @@ DangerEventSchema.statics = {
    return this
        .findOne({_id: id})
        .exec(cb)
+  },
+
+  findAll: function (cb) {
+    return this
+        .find({
+          isSend: config.IS_SEND['notSend'].key
+        })
+        .populate('plantId')
+        .sort('createAt')
+        .exec(cb)
   }
 };
 

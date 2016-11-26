@@ -25,7 +25,8 @@ router.delete('/app/plants/plant/:id', plant.deletePlant);
 router.get('/app/plant/:plantId/data/tempHum/day/:days', iosData.getTempHumByDays);
 router.post('/ruff/plant/:plantId/data/tempHum', ruffData.saveTempHum);
 // 危险事件
-router.get('/app/plant/:plantId/data/dangerEvent', iosData.getDangerEvent);
+router.get('/app/plant/:plantId/data/dangerEvent', iosData.getDangerEventOnePlant);
+router.get('/app/plants/data/dangerEvent', iosData.getDangerEventAll);
 router.post('/ruff/plant/:plantId/data/dangerEvent', ruffData.saveDangerEvent);
 router.get('/ruff/plant/data/dangerEvent/:eventId', ruffData.solveDangerEvent);
 

@@ -7,7 +7,6 @@ let pub = {},
     _ = require('underscore'),
     DangerEvent = require('./../../models/dangerEventModel'),
     TempHum = require('./../../models/tempHumModel'),
-    Plant = require('./../../models/plantModel'),
     config = require('./../../service/config'),
     promise = require('promise'),
     ERROR_INFO = require('./../../service/config').ERROR_INFO;
@@ -41,11 +40,11 @@ pub.getTempHumByDays = (req, res) => {
 
 
 /**
- * 获取没有发送的紧急事件
+ * 获取没有发送的紧急事件(一个植物的)
  * @param req
  * @param res
  */
-pub.getDangerEvent = (req, res) => {
+pub.getDangerEventOnePlant = (req, res) => {
 
   let plantId = req.params.plantId || false;
 
@@ -70,6 +69,34 @@ pub.getDangerEvent = (req, res) => {
   } else {
     res.json(ERROR_INFO.REQUEST_ERR)
   }
+};
+
+
+/**
+ * 获取没有发送的紧急事件(所有植物的)
+ * @param req
+ * @param res
+ */
+pub.getDangerEventAll = (req, res) => {
+
+    DangerEvent.findAll((err, dangerEventList) => {
+      if (err) {
+        console.log(err);
+        res.json(ERROR_INFO.DB_SELECT_ERR);
+      } else {
+        res.json({
+          "info": ERROR_INFO.SUCCESS,
+          "dangerEventList": dangerEventList
+        });
+
+        _.forEach(dangerEventList, (dangerEvent) => {
+          dangerEvent.isSend = config.IS_SEND["send"].key;
+          // TODO 处理不了异常事件
+          dangerEvent.save();
+        })
+      }
+    })
+
 };
 
 
