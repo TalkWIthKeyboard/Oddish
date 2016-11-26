@@ -4,6 +4,7 @@
 'use strict';
 
 let pub = {};
+let _ = require('underscore');
 let Plant = require('./../../models/plantModel');
 let PlantService = require('./../../service/plantService');
 let ERROR_INFO = require('./../../service/config').ERROR_INFO;
@@ -129,7 +130,7 @@ pub.findPlant = (req, res) => {
       if (err) {
         res.json(ERROR_INFO.PLANT_ERR);
       } else {
-        plant.age = PlantService.realAge(plant.meta.createAt, plant.age);
+        plant.age = PlantService.realAge(plant.createAt, plant.age);
         res.json({
           "info": ERROR_INFO.SUCCESS,
           "plant": plant
@@ -155,7 +156,7 @@ pub.findPagination = (req, res) => {
       res.json(ERROR_INFO.PLANT_ERR);
     } else {
       _.map(plants, (plant) => {
-        plant.age = PlantService.realAge(plant.meta.createAt, plant.age);
+        plant.age = PlantService.realAge(plant.createAt, plant.age);
       });
 
       res.json({
@@ -182,7 +183,7 @@ pub.findNamePagination = (req, res) => {
       res.json(ERROR_INFO.PLANT_ERR);
     } else {
       _.map(plants, (plant) => {
-        plant.age = PlantService.realAge(plant.meta.createAt, plant.age);
+        plant.age = PlantService.realAge(plant.createAt, plant.age);
       });
 
       res.json({

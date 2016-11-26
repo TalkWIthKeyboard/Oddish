@@ -4,6 +4,7 @@
 'use strict';
 
 let pub = {},
+    _ = require('underscore'),
     TempHum = require('./../../models/tempHumModel'),
     ERROR_INFO = require('./../../service/config').ERROR_INFO;
 
