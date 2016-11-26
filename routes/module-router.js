@@ -6,17 +6,23 @@
 let router = require('express').Router(),
     plant = require('./ios/AppPlantRoutes'),
     ruffData = require('./ruff/RuffDataRoutes'),
-    iosData = require('./ios/AppDataRoutes');
+    iosData = require('./ios/AppDataRoutes'),
+    ruff = require('./ruff/RuffBasicRoutes');
 
 /**
  * 植物相关操作
  */
+// 植物
 router.get('/app/plants/all/:page', plant.findPagination);
 router.get('/app/plants/name/:name/:page', plant.findNamePagination);
 router.get('/app/plants/plant/:id', plant.findPlant);
 router.post('/app/plants/plant', plant.createPlant);
 router.put('/app/plants/plant/:id', plant.changePlant);
 router.delete('/app/plants/plant/:id', plant.deletePlant);
+// RUFF
+router.get('/app/ruffs/all', ruff.getAllRuff);
+router.post('/ruff/ruffs/name/:ruffName',ruff.createRuff);
+
 
 /**
  * 数据相关操作

@@ -40,6 +40,17 @@ exports.IS_SOLVE = {
   }
 };
 
+exports.IS_USE = {
+  'use': {
+    'key': 0,
+    'value': 'use'
+  },
+  'notUse': {
+    'key': 1,
+    'value': 'notUse'
+  }
+};
+
 exports.ERROR_INFO = {
 
   SUCCESS: {
@@ -83,5 +94,9 @@ exports.ERROR_INFO = {
   DANGER_EVENT_SOLVE_ERR: {
     'code': 531,
     'value': '这个危险事件已经解决'
+  },
+  RUFF_ERR: {
+    'code': 530,
+    'value': '这个RUFF已经存在了'
   }
 };

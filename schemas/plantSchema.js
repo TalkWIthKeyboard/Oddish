@@ -9,6 +9,7 @@ let mongoose = require('mongoose'),
 
 let PlantSchema = new mongoose.Schema({
   name: String,
+  ruffId: String,
   varieties: String,
   img: String,
   sex: String,

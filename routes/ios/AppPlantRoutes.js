@@ -6,6 +6,8 @@
 let pub = {};
 let _ = require('underscore');
 let Plant = require('./../../models/plantModel');
+let config = require('./../../service/config');
+let Ruff = require('./../../models/ruffModel');
 let PlantService = require('./../../service/plantService');
 let ERROR_INFO = require('./../../service/config').ERROR_INFO;
 
@@ -21,27 +23,44 @@ pub.createPlant = (req, res) => {
       varieties = req.body.varieties || false,
       img = req.body.img || false,
       sex = req.body.sex || false,
-      age = req.body.age || false;
+      age = req.body.age || false,
+      ruffId = req.body.ruffId || false;
   // TODO 图片
 
-  if (name && varieties && sex && img && age) {
-    let _plant = new Plant({
-      name: name,
-      varieties: varieties,
-      img: img,
-      sex: sex,
-      age: age,
-      mood: 100
-    });
-    _plant.save((err, plant) => {
-      if (err) {
-        console.log(err);
-        res.json(ERROR_INFO.DB_SAVE_ERR)
+  if (name && varieties && sex && img && age && ruffId) {
+    Ruff.findById(ruffId, (err, ruff) => {
+      if (err || ruff.isUse == config.IS_USE.use.key) {
+        res.json(ERROR_INFO.DB_SELECT_ERR);
       } else {
-        res.json({
-          "info": ERROR_INFO.SUCCESS,
-          "id": plant.id
+        let _plant = new Plant({
+          name: name,
+          varieties: varieties,
+          img: img,
+          sex: sex,
+          age: age,
+          mood: 100,
+          ruffId: ruffId
         });
+
+        _plant.save((err, plant) => {
+          if (err) {
+            console.log(err);
+            res.json(ERROR_INFO.DB_SAVE_ERR)
+          } else {
+            ruff.isUse = config.IS_USE.use.key;
+            ruff.save((err) => {
+              if (err) {
+                console.log(err);
+                res.json(ERROR_INFO.DB_CHANGE_ERR);
+              } else {
+                res.json({
+                  "info": ERROR_INFO.SUCCESS,
+                  "id": plant.id
+                })
+              }
+            })
+          }
+        })
       }
     })
   } else {
@@ -98,16 +117,25 @@ pub.deletePlant = (req, res) => {
 
   let id = req.params.id || false;
   if (id) {
-    Plant.findById(id, (err) => {
+    Plant.findById(id, (err, plant) => {
       if (err) {
         res.json(ERROR_INFO.PLANT_ERR);
       } else {
-        Plant.deleteById(id, (err) => {
-          if (err) {
-            res.json(ERROR_INFO.DB_DELETE_ERR)
-          } else {
-            res.json(ERROR_INFO.SUCCESS)
-          }
+        Ruff.findById(plant.ruffId, (err, ruff) => {
+          ruff.isUse = config.IS_USE.notUse.key;
+          ruff.save((err) => {
+            if (err) {
+              res.json(ERROR_INFO.DB_CHANGE_ERR)
+            } else {
+              Plant.deleteById(id, (err) => {
+                if (err) {
+                  res.json(ERROR_INFO.DB_DELETE_ERR)
+                } else {
+                  res.json(ERROR_INFO.SUCCESS)
+                }
+              })
+            }
+          })
         })
       }
     });
