@@ -23,11 +23,11 @@ pub.saveTempHum = (req, res) => {
       ruffId = req.params.ruffId;
 
   if (ruffId && temperature && humidity){
-    if (err){
-      console.log(err);
-      res.json(ERROR_INFO.DB_SELECT_ERR)
-    } else {
-      Plant.findByRuffId(ruffId, (err, plant) => {
+    Plant.findByRuffId(ruffId, (err, plant) => {
+      if (err){
+        console.log(err);
+        res.json(ERROR_INFO.DB_SELECT_ERR)
+      } else {
         let _tempHum = new TempHum({
           plantId: plant.id,
           temperature: temperature,
@@ -45,8 +45,8 @@ pub.saveTempHum = (req, res) => {
             })
           }
         })
-      })
-    }
+      }
+    })
   } else {
     res.json(ERROR_INFO.REQUEST_ERR);
   }
