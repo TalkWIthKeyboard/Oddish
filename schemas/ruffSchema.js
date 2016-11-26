@@ -34,8 +34,7 @@ RuffSchema.statics = {
 
   findByName: function (name, cb) {
     return this
-        .find({name: name})
-        .sort('updateAt')
+        .findOne({name: name})
         .exec(cb)
   },
 

@@ -24,11 +24,11 @@ pub.createPlant = (req, res) => {
       img = req.body.img || false,
       sex = req.body.sex || false,
       age = req.body.age || false,
-      ruffId = req.body.ruffId || false;
+      ruffName = req.body.ruffName || false;
   // TODO 图片
 
   if (name && varieties && sex && img && age && ruffId) {
-    Ruff.findById(ruffId, (err, ruff) => {
+    Ruff.findByName(ruffName, (err, ruff) => {
       if (err || ruff.isUse == config.IS_USE.use.key) {
         res.json(ERROR_INFO.DB_SELECT_ERR);
       } else {
