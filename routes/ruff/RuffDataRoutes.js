@@ -95,18 +95,22 @@ pub.solveDangerEvent = (req, res) => {
       if (err){
         res.json(ERROR_INFO.DANGER_EVENT_ERR)
       } else {
-        dangerEvent.isSolve = config.IS_SOLVE["solve"].key;
-        dangerEvent.isSend = config.IS_SEND["notSend"].key;
-        // TODO 交流的话要修改
-        dangerEvent.sentence = null;
-        dangerEvent.save((err) => {
-          if (err){
-            console.log(err);
-            res.json(ERROR_INFO.DB_CHANGE_ERR);
-          } else {
-            res.json(ERROR_INFO.SUCCESS);
-          }
-        })
+        if (dangerEvent.isSolve == config.IS_SOLVE["notSolve"].key){
+          dangerEvent.isSolve = config.IS_SOLVE["solve"].key;
+          dangerEvent.isSend = config.IS_SEND["notSend"].key;
+          // TODO 交流的话要修改
+          dangerEvent.sentence = null;
+          dangerEvent.save((err) => {
+            if (err){
+              console.log(err);
+              res.json(ERROR_INFO.DB_CHANGE_ERR);
+            } else {
+              res.json(ERROR_INFO.SUCCESS);
+            }
+          })
+        } else {
+          res.json(ERROR_INFO.DANGER_EVENT_SOLVE_ERR);
+        }
       }
     })
   } else {

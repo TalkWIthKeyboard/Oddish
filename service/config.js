@@ -79,5 +79,9 @@ exports.ERROR_INFO = {
   DANGER_EVENT_ERR: {
     'code': 530,
     'value': '不存在这个危险事件'
+  },
+  DANGER_EVENT_SOLVE_ERR: {
+    'code': 531,
+    'value': '这个危险事件已经解决'
   }
 };
