@@ -7,6 +7,7 @@ let pub = {},
     _ = require('underscore'),
     DangerEvent = require('./../../models/dangerEventModel'),
     TempHum = require('./../../models/tempHumModel'),
+    Plant = require('./../../models/plantModel'),
     config = require('./../../service/config'),
     promise = require('promise'),
     ERROR_INFO = require('./../../service/config').ERROR_INFO;

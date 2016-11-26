@@ -7,7 +7,10 @@ let mongoose = require('mongoose'),
     config = require('./../service/config');
 
 let DangerEventSchema = new mongoose.Schema({
-  plantId: String,
+  plantId: {
+    type : mongoose.Schema.ObjectId,
+    ref : 'Plant'
+  },
   event: String,
   classId: String,
   sentence: String,
@@ -40,6 +43,7 @@ DangerEventSchema.statics = {
           plantId: id,
           isSend: config.IS_SEND['notSend'].key
         })
+        .populate('plantId')
         .sort('createAt')
         .exec(cb)
   },

@@ -55,6 +55,7 @@ pub.saveDangerEvent = (req, res) => {
       classId = req.body.classId;
 
   if (plantId && event && classId){
+
     let _dangerEvent = new DangerEvent({
       plantId: plantId,
       event: event,

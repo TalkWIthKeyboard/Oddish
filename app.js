@@ -10,7 +10,7 @@ let port = process.env.PORT || 5200,
     bodyParser = require('body-parser'),
     app = express();
 
-mongoose.connect('mongodb://localhost:27016/Oddish');
+mongoose.connect('mongodb://localhost:27017/Oddish');
 
 // 设置view的路径
 app.set('views', './views');
