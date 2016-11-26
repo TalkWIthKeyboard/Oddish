@@ -10,6 +10,7 @@ let pub = {},
     TempHum = require('./../../models/tempHumModel'),
     Sound = require('./../../models/soundModel'),
     DangerEvent = require('./../../models/dangerEventModel'),
+    System = require('./../../models/systemModel'),
     config = require('./../../service/config'),
     ERROR_INFO = require('./../../service/config').ERROR_INFO;
 
@@ -112,7 +113,7 @@ pub.saveDangerEvent = (req, res) => {
           plantId: plant.id,
           event: event,
           classId: classId,
-          sentence: null,
+          sentence: config.MESSAGE[event].sentence,
           isSend: config.IS_SEND['notSend'].key,
           isSolve: config.IS_SOLVE['notSolve'].key
         });
@@ -122,9 +123,19 @@ pub.saveDangerEvent = (req, res) => {
             console.log(err);
             res.json(ERROR_INFO.DB_SAVE_ERR);
           } else {
-            res.json({
-              "info": ERROR_INFO.SUCCESS,
-              "dangerEventId": dangerEvent.id
+            System.findByKey(config.MESSAGE[event].pd, (err, system) => {
+              system.value = config.SYSTEM_VALUE.cantSend.key;
+              system.save((err) => {
+                if (err){
+                  console.log(err);
+                  res.json(ERROR_INFO.DB_SELECT_ERR);
+                } else {
+                  res.json({
+                    "info": ERROR_INFO.SUCCESS,
+                    "dangerEventId": dangerEvent.id
+                  })
+                }
+              })
             })
           }
         })
@@ -191,14 +202,23 @@ pub.solveDangerEvent = (req, res) => {
         if (dangerEvent.isSolve == config.IS_SOLVE["notSolve"].key) {
           dangerEvent.isSolve = config.IS_SOLVE["solve"].key;
           dangerEvent.isSend = config.IS_SEND["notSend"].key;
-          // TODO 交流的话要修改
-          dangerEvent.sentence = null;
+          dangerEvent.sentence = config.SUCCESS_MESSAGE[dangerEvent.event].sentence;
           dangerEvent.save((err) => {
             if (err) {
               console.log(err);
               res.json(ERROR_INFO.DB_CHANGE_ERR);
             } else {
-              res.json(ERROR_INFO.SUCCESS);
+              System.findByKey(config.MESSAGE[dangerEvent.event].pd, (err, system) => {
+                system.value = config.SYSTEM_VALUE.canSend.key;
+                system.save((err) => {
+                  if (err){
+                    console.log(err);
+                    res.json(ERROR_INFO.DB_SAVE_ERR)
+                  } else {
+                    res.json(ERROR_INFO.SUCCESS)
+                  }
+                })
+              })
             }
           })
         } else {

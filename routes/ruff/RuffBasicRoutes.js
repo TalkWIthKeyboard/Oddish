@@ -6,6 +6,7 @@
 let pub = {},
     _ = require('underscore'),
     Ruff = require('./../../models/ruffModel'),
+    System = require('./../../models/systemModel'),
     config = require('./../../service/config'),
     ERROR_INFO = require('./../../service/config').ERROR_INFO;
 
@@ -59,6 +60,28 @@ pub.getAllRuff = (req, res) => {
       res.json({
         "info": ERROR_INFO.SUCCESS,
         "ruffs": ruffs
+      })
+    }
+  })
+};
+
+
+/**
+ * 获取系统变量
+ * @param req
+ * @param res
+ */
+pub.getSystem = (req, res) => {
+
+  let key = req.params.key || false;
+  System.findByKey(key, (err, system) => {
+    if (err){
+      console.log(err);
+      res.json(ERROR_INFO.DB_SELECT_ERR);
+    } else {
+      res.json({
+        "info": ERROR_INFO.SUCCESS,
+        "value": system.value
       })
     }
   })
