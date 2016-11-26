@@ -10,7 +10,10 @@ let mongoose = require('mongoose'),
 let PlantSchema = new mongoose.Schema({
   name: String,
   ruffId: String,
-  varieties: String,
+  varieties: {
+    type : mongoose.Schema.ObjectId,
+    ref : 'Varieties'
+  },
   img: String,
   sex: String,
   mood: Number,
@@ -39,6 +42,7 @@ PlantSchema.statics = {
   findByPage: function (page, cb) {
     return this
         .find({})
+        .populate('varieties')
         .skip((page - 1) * config.pageSize)
         .limit(config.pageSize)
         .sort('updateAt')
@@ -48,6 +52,7 @@ PlantSchema.statics = {
   findById: function (id, cb) {
     return this
         .findOne({_id: id})
+        .populate('varieties')
         .exec(cb)
   },
 
@@ -55,6 +60,7 @@ PlantSchema.statics = {
     let reg = new RegExp(name);
     return this
         .find({name: {$regex: reg}})
+        .populate('varieties')
         .skip((page - 1) * config.pageSize)
         .limit(config.pageSize)
         .sort('updateAt')
@@ -64,6 +70,7 @@ PlantSchema.statics = {
   findByRuffId: function (ruffId, cb) {
     return this
         .findOne({ruffId: ruffId})
+        .populate('varieties')
         .exec(cb)
   },
 

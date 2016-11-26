@@ -3,7 +3,6 @@
  */
 
 'use strict';
-
 let mongoose = require('mongoose');
 let plantSchema = require('../schemas/plantSchema');
 let Plant = mongoose.model('Plant',plantSchema);

@@ -22,6 +22,11 @@ router.delete('/app/plants/plant/:id', plant.deletePlant);
 // RUFF
 router.get('/app/ruffs/all', ruff.getAllRuff);
 router.post('/ruff/ruffs/name/:ruffName',ruff.createRuff);
+// 植物种类
+router.get('/app/varieties/all', plant.getAllVarieties);
+router.post('/app/varieties/variety', plant.createVarieties);
+router.put('/app/varieties/variety/:id', plant.changeVarieties);
+router.get('/ruff/varieties/ruff/:ruffId', plant.getVarietiesByRuffId);
 
 
 /**

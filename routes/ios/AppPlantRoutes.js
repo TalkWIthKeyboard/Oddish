@@ -9,6 +9,7 @@ let Plant = require('./../../models/plantModel');
 let config = require('./../../service/config');
 let Ruff = require('./../../models/ruffModel');
 let PlantService = require('./../../service/plantService');
+let Varieties = require('./../../models/varietiesModel');
 let ERROR_INFO = require('./../../service/config').ERROR_INFO;
 
 /**
@@ -223,6 +224,135 @@ pub.findNamePagination = (req, res) => {
   })
 };
 
-// TODO 植物图表
 
+/**
+ * 创建植物类型
+ * @param req
+ * @param res
+ */
+pub.createVarieties = (req, res) => {
+
+  let name = req.body.name || false,
+      temperatureMin = req.body.temperatureMin || false,
+      temperatureMax = req.body.temperatureMax || false,
+      humidityMin = req.body.humidityMin || false,
+      humidityMax = req.body.humidityMax || false,
+      illuminationMax = req.body.illuminationMax || false;
+
+  if (name && temperatureMin && temperatureMax && humidityMin && humidityMax && illuminationMax) {
+    let _varieties = new Varieties({
+      name: name,
+      temperatureMin: temperatureMin,
+      temperatureMax: temperatureMax,
+      humidityMin: humidityMin,
+      humidityMax: humidityMax,
+      illuminationMax: illuminationMax
+    });
+
+    _varieties.save((err, varieties) => {
+      if (err) {
+        console.log(err);
+        res.json(ERROR_INFO.DB_SAVE_ERR);
+      } else {
+        res.json({
+          "info": ERROR_INFO.SUCCESS,
+          "varietiesId": varieties.id
+        })
+      }
+    })
+  } else {
+    res.json(ERROR_INFO.REQUEST_ERR)
+  }
+};
+
+
+/**
+ * 修改植物类型
+ * @param req
+ * @param res
+ */
+pub.changeVarieties = (req, res) => {
+
+  let name = req.body.name || false,
+      temperatureMin = req.body.temperatureMin || false,
+      temperatureMax = req.body.temperatureMax || false,
+      humidityMin = req.body.humidityMin || false,
+      humidityMax = req.body.humidityMax || false,
+      illuminationMax = req.body.illuminationMax || false,
+      id = req.params.id || false;
+
+  if (name && temperatureMin && temperatureMax && humidityMin && humidityMax && illuminationMax && id) {
+    Varieties.findById(id, (err, varieties) => {
+      if (err) {
+        console.log(err);
+        res.json(ERROR_INFO.DB_SELECT_ERR);
+      } else {
+        varieties.name = name;
+        varieties.temperatureMin = temperatureMin;
+        varieties.temperatureMax = temperatureMax;
+        varieties.humidityMin = humidityMin;
+        varieties.humidityMax = humidityMax;
+        varieties.illuminationMax = illuminationMax;
+
+        varieties.save((err) => {
+          if (err) {
+            console.log(err);
+            res.json(ERROR_INFO.DB_CHANGE_ERR);
+          } else {
+            res.json(ERROR_INFO.SUCCESS);
+          }
+        })
+      }
+    })
+  } else {
+    res.json(ERROR_INFO.REQUEST_ERR)
+  }
+};
+
+
+/**
+ * 获取所有的类型列表
+ * @param req
+ * @param res
+ */
+pub.getAllVarieties = (req, res) => {
+
+  Varieties.findAll((err, varieties) => {
+    if (err) {
+      console.log(err);
+      res.json(ERROR_INFO.DB_SELECT_ERR);
+    } else {
+      res.json({
+        "info": ERROR_INFO.SUCCESS,
+        "varieties": varieties
+      })
+    }
+  })
+};
+
+
+/**
+ * 根据ruffId获取类型
+ * @param req
+ * @param res
+ */
+pub.getVarietiesByRuffId = (req, res) => {
+
+  let ruffId = req.params.ruffId || false;
+  if (ruffId) {
+    Plant.findByRuffId(ruffId, (err, plant) => {
+      if (err){
+        console.log(err);
+        res.json(ERROR_INFO.DB_SELECT_ERR);
+      } else {
+        res.json({
+          "info": ERROR_INFO.SUCCESS,
+          "varieties": plant.varieties
+        })
+      }
+    })
+  } else {
+    res.json(ERROR_INFO.REQUEST_ERR)
+  }
+};
 module.exports = pub;
