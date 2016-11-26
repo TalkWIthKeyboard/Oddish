@@ -40,7 +40,7 @@ PlantSchema.statics = {
         .find({})
         .skip((page - 1) * config.pageSize)
         .limit(config.pageSize)
-        .sort('meta.updateAt')
+        .sort('updateAt')
         .exec(cb)
   },
 
@@ -56,7 +56,7 @@ PlantSchema.statics = {
         .find({name: {$regex: reg}})
         .skip((page - 1) * config.pageSize)
         .limit(config.pageSize)
-        .sort('meta.updateAt')
+        .sort('updateAt')
         .exec(cb)
   },
 

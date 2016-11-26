@@ -5,6 +5,7 @@
 
 exports.pageSize = 10;
 exports.searchPageSize = 20;
+exports.sendTime = 5;
 
 exports.USER_SEX = {
   'female': {
@@ -14,6 +15,28 @@ exports.USER_SEX = {
   'male': {
     'key': 0,
     'value': 'male'
+  }
+};
+
+exports.IS_SEND = {
+  'send': {
+    'key': 0,
+    'value': 'send'
+  },
+  'notSend': {
+    'key': 1,
+    'value': 'notSend'
+  }
+};
+
+exports.IS_SOLVE = {
+  'solve': {
+    'key': 0,
+    'value': 'solve'
+  },
+  'notSolve': {
+    'key': 1,
+    'value': 'notSolve'
   }
 };
 
@@ -48,9 +71,13 @@ exports.ERROR_INFO = {
     'value': '数据库检索错误'
   },
 
-  // 植物状态操作码
+  // 事物状态操作码
   PLANT_ERR: {
     'code': 520,
     'value': '不存在这个植物'
   },
+  DANGER_EVENT_ERR: {
+    'code': 530,
+    'value': '不存在这个危险事件'
+  }
 };
