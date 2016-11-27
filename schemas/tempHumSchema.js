@@ -57,6 +57,13 @@ tempHumSchema.statics = {
     return this
         .findOne({_id: id})
         .exec(cb)
+  },
+
+  findAtNow: function (cb) {
+    return this
+        .findOne({})
+        .sort({updateAt: -1})
+        .exec(cb)
   }
 };
 

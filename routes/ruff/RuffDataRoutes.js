@@ -133,7 +133,7 @@ pub.saveDangerEvent = (req, res) => {
                   res.json({
                     "info": ERROR_INFO.SUCCESS,
                     "dangerEventId": dangerEvent.id,
-                    "value": system.value
+                    "value": system.value,
                   })
                 }
               })
@@ -218,7 +218,7 @@ pub.solveDangerEvent = (req, res) => {
                   } else {
                     res.json({
                       "info": ERROR_INFO.SUCCESS,
-                      "value": system.value
+                      "problem": system.value,
                     })
                   }
                 })

@@ -5,10 +5,14 @@
 
 let pub = {};
 let _ = require('underscore');
+let Promise = require('promise');
 let Plant = require('./../../models/plantModel');
 let config = require('./../../service/config');
 let Ruff = require('./../../models/ruffModel');
 let PlantService = require('./../../service/plantService');
+let SoundModel = require('./../../models/soundModel');
+let TempHumModel = require('./../../models/tempHumModel');
+let Illumination = require('./../../models/illuminationModel');
 let Varieties = require('./../../models/varietiesModel');
 let ERROR_INFO = require('./../../service/config').ERROR_INFO;
 
@@ -147,6 +151,33 @@ pub.deletePlant = (req, res) => {
 
 
 /**
+ * 构造promise数组
+ * @returns {[*,*,*]}
+ */
+function makePromise() {
+  let soundPromise = new Promise((resolve, reject) => {
+    SoundModel.findAtNow((err, sound) => {
+      err ? reject(err) : resolve(sound.sound)
+    })
+  });
+
+  let tempHumPromise = new Promise((resolve, reject) => {
+    TempHumModel.findAtNow((err, tempHum) => {
+      err ? reject(err) : resolve([tempHum.temperature,tempHum.humidity])
+    })
+  });
+
+  let illuminationPromise = new Promise((resolve, reject) => {
+    Illumination.findAtNow((err, illumination) => {
+      err ? reject(err) : resolve(illumination.illumination)
+    })
+  });
+
+  return [soundPromise, tempHumPromise, illuminationPromise];
+}
+
+
+/**
  * 查找植物
  * @param req
  * @param res
@@ -159,11 +190,15 @@ pub.findPlant = (req, res) => {
       if (err) {
         res.json(ERROR_INFO.PLANT_ERR);
       } else {
-        plant.age = PlantService.realAge(plant.createAt, plant.age);
-        res.json({
-          "info": ERROR_INFO.SUCCESS,
-          "plant": plant
-        })
+        let paramsArr = makePromise();
+        Promise.all(paramsArr).then((results) => {
+          plant.age = PlantService.realAge(plant.createAt, plant.age);
+          res.json({
+            "info": ERROR_INFO.SUCCESS,
+            "plant": plant,
+            "params": results
+          })
+        });
       }
     })
   } else {
