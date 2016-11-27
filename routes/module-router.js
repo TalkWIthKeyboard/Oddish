@@ -47,7 +47,7 @@ router.post('/ruff/plant/:ruffId/data/sound',ruffData.saveSound);
 router.get('/app/plant/:plantId/data/dangerEvent', iosData.getDangerEventOnePlant);
 router.get('/app/plants/data/dangerEvent', iosData.getDangerEventAll);
 router.post('/ruff/plant/:ruffId/data/dangerEvent', ruffData.saveDangerEvent);
-router.get('/ruff/plant/data/dangerEvent/:eventId', ruffData.solveDangerEvent);
+router.post('/ruff/plant/data/dangerEvent/:eventId', ruffData.solveDangerEvent);
 
 
 
