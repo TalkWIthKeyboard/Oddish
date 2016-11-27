@@ -130,10 +130,17 @@ pub.saveDangerEvent = (req, res) => {
                   console.log(err);
                   res.json(ERROR_INFO.DB_SELECT_ERR);
                 } else {
-                  res.json({
-                    "info": ERROR_INFO.SUCCESS,
-                    "dangerEventId": dangerEvent.id,
-                    "value": system.value,
+                  Plant.findById(dangerEvent.plantId, (err, plant) => {
+                    plant.mood = plant.mood - 10;
+                    plant.save((err) => {
+                      if (!err){
+                        res.json({
+                          "info": ERROR_INFO.SUCCESS,
+                          "dangerEventId": dangerEvent.id,
+                          "value": system.value,
+                        })
+                      }
+                    })
                   })
                 }
               })
@@ -216,9 +223,18 @@ pub.solveDangerEvent = (req, res) => {
                     console.log(err);
                     res.json(ERROR_INFO.DB_SAVE_ERR)
                   } else {
-                    res.json({
-                      "info": ERROR_INFO.SUCCESS,
-                      "problem": system.value,
+                    Plant.findById(dangerEvent.plantId, (err, plant) => {
+                      if (!err){
+                        plant.mood += 10;
+                        plant.save((err) => {
+                          if (!err){
+                            res.json({
+                              "info": ERROR_INFO.SUCCESS,
+                              "problem": system.value,
+                            })
+                          }
+                        })
+                      }
                     })
                   }
                 })
